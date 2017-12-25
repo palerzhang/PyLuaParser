@@ -50,7 +50,7 @@ root = {
 		quotes = "&#34; (0x0022) %22 0x22 034 &#x22;",
 		["\\\"\b\f\n\r\t`1~!@#$%^&*()_+-=[]{}|;:',./<>?"]
 		= "A key can be any string"]]
-	--         ]]
+	--   ]]
 		compact = {1,2,3,4,5,6,7},
 		luatext = "{\"object with 1 member\" = {\"array with 1 element\"}}",
 		quotes = "&#34; (0x0022) %22 0x22 034 &#x22;",

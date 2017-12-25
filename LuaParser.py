@@ -35,6 +35,7 @@ def parseInner(s):
     cnt_single_quote = 0
     in_quote = False
     in_comment = False
+    in_multi_comment = False
     in_escape = False
     former = 0
     is_list = True
@@ -51,6 +52,10 @@ def parseInner(s):
                 former = i+1
                 in_comment = False
             continue
+        if (in_multi_comment): #if in multi-lines comment, skip all except ]]
+            if (s[i] == ']' and i+1 < len(s) and s[i+1] == ']'):
+                former = i+1
+                in_multi_comment = False
         elif (s[i] == '{' and not in_quote): #left big bracket
             cnt_big_bracket += 1
         elif (s[i] == '}' and not in_quote): #right big bracket
@@ -69,9 +74,14 @@ def parseInner(s):
             # comma, split
             lst.append(s[former:i])
             former = i+1
-        elif (s[i] == '-' and not in_comment and not in_quote and cnt_big_bracket == 0): #maybe a comment
-            if (i+1 < len(s)): #if not out of range
-                if (s[i+1] == '-'): #if another dash and not in quote
+        elif (s[i] == '-' and not in_multi_comment and not in_comment and not in_quote and cnt_big_bracket == 0): #maybe a comment
+            if (i+1 < len(s) and s[i+1] == '-'): #if another dash and not in quote
+                if (i+2 < len(s) and s[i+2] == '[' and i+3 < len(s) and s[i+3] == '['): 
+                #if a multi-line token
+                    in_multi_comment = True
+                    continue
+                else:
+                # otherwise, simple comment
                     in_comment = True
                     continue #skip those chars
 
@@ -125,14 +135,24 @@ def parseDictItem(s):
     elif (s[0] == "["): # a key
         idx = 0
         in_quote = False
+        in_escape = False
         for i in range(len(s)):
-            if (s[i] == "]" and not in_quote):
+            if (in_escape): #skip this char, wait for later parsing
+                in_escape = False
+                continue
+            if (s[i] == "\\"): #escape
+                in_escape = True
+                continue
+            if (s[i] == "\""):
+                in_quote = not in_quote
+            elif (s[i] == "]" and not in_quote):
                 idx = i
                 break
         if (idx <= 0):
             raise SyntaxError
         else:
             key = s[1:idx]
+            #print(key)
             if (key[0] == "\""):
                 key = parseString(key)
             elif (key[0] in numberHead):

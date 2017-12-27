@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>cd55878e-7dd3-4268-9255-da4259608481</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>LuaParser.py</StartupFile>
+    <StartupFile>PyLuaTblParser.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -24,6 +24,7 @@
   <ItemGroup>
     <Compile Include="helloworld.py" />
     <Compile Include="LuaParser.py" />
+    <Compile Include="PyLuaTblParser.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="simple00.lua" />
